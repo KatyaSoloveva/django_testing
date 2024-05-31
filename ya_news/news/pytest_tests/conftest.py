@@ -8,6 +8,8 @@ from django.utils.timezone import now
 
 from news.models import Comment, News
 
+COMMENTS_RANGE = 10
+
 
 @pytest.fixture
 def author(django_user_model):
@@ -63,16 +65,19 @@ def comment(author, news):
 
 @pytest.fixture
 def comments(author, news):
-    for index in range(10):
-        comment = Comment.objects.create(news=news, author=author,
-                                         text=f'Текст {index}')
-        comment.created = now() + timedelta(days=index)
-        comment.save()
+    for index in range(COMMENTS_RANGE):
+        return Comment.objects.create(news=news, author=author,
+                                      text=f'Текст {index}')
 
 
 @pytest.fixture
-def pk_for_args(news):
-    return (news.pk,)
+def form_data():
+    return {'text': 'Новый текст комментария'}
+
+
+@pytest.fixture
+def home_url():
+    return reverse('news:home')
 
 
 @pytest.fixture
@@ -81,7 +86,25 @@ def detail_url(news):
 
 
 @pytest.fixture
-def form_data(news, author):
-    return {'news': news,
-            'author': author,
-            'text': 'Новый текст комментария'}
+def delete_url(comment):
+    return reverse('news:delete', args=(comment.id,))
+
+
+@pytest.fixture
+def edit_url(comment):
+    return reverse('news:edit', args=(comment.id,))
+
+
+@pytest.fixture
+def login_url():
+    return reverse('users:login')
+
+
+@pytest.fixture
+def logout_url():
+    return reverse('users:logout')
+
+
+@pytest.fixture
+def signup_url():
+    return reverse('users:signup')
