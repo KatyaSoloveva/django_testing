@@ -7,7 +7,9 @@ from news.models import Comment
 from news.forms import BAD_WORDS, WARNING
 
 
-@pytest.mark.django_db
+pytestmark = pytest.mark.django_db
+
+
 def test_anonymous_user_cant_create_comment(client, detail_url,
                                             form_data):
     """Анонимный пользователь не может отправить комментарий."""
@@ -30,10 +32,7 @@ def test_auth_user_can_create_comment(author_client, detail_url,
 
 
 def test_user_cant_use_bad_words(not_author_client, detail_url):
-    """
-    Если комментарий содержит запрещённые слова, он
-    не будет опубликован, а форма вернёт ошибку.
-    """
+    """Нельзя опубликовать комментарий с запрещенными словами."""
     count_comments_before = Comment.objects.count()
     bad_words_data = {'text': f'Какой-то текст, {BAD_WORDS[0]}, еще текст'}
     response = not_author_client.post(detail_url, data=bad_words_data)

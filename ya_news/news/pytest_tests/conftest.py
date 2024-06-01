@@ -46,7 +46,7 @@ def news():
 
 @pytest.fixture
 def all_news():
-    return News.objects.bulk_create(
+    News.objects.bulk_create(
         News(title=f'Новость {index}', text='Просто текст.',
              date=now() - timedelta(days=index))
         for index in range(settings.NEWS_COUNT_ON_HOME_PAGE + 1)
@@ -66,8 +66,8 @@ def comment(author, news):
 @pytest.fixture
 def comments(author, news):
     for index in range(COMMENTS_RANGE):
-        return Comment.objects.create(news=news, author=author,
-                                      text=f'Текст {index}')
+        Comment.objects.create(news=news, author=author,
+                               text=f'Текст {index}')
 
 
 @pytest.fixture

@@ -25,6 +25,8 @@ def test_news_order(client, home_url, all_news):
 
 def test_comments_order(client, detail_url, comments):
     """
+    Сортировка комментариев в хронологическом порядке.
+
     Комментарии на странице отдельной новости отсортированы в хронологическом
     порядке: старые в начале списка, новые — в конце.
     """
@@ -39,6 +41,8 @@ def test_comments_order(client, detail_url, comments):
 
 def test_anonymous_client_has_no_form(client, detail_url):
     """
+    Недоступность формы анонимному пользователю.
+
     Анонимному пользователю недоступна форма для отправки комментария на
     странице отдельной новости.
     """
@@ -48,6 +52,8 @@ def test_anonymous_client_has_no_form(client, detail_url):
 
 def test_authorized_client_has_form(not_author_client, detail_url):
     """
+    Доступность формы авторизованному пользователю.
+
     Авторизованному пользователю доступна форма для отправки комментария на
     странице отдельной новости.
     """

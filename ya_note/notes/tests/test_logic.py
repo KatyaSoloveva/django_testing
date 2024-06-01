@@ -38,10 +38,7 @@ class TestLogic(ServicesClass):
         self.assertEqual(Note.objects.count(), self.count_notes_before)
 
     def test_empty_slug(self):
-        """
-        Если при создании заметки не заполнен slug, то он
-        формируется автоматически.
-        """
+        """Возможно создать заметку без заполнения поля slug"""
         Note.objects.all().delete()
         self.form_data.pop('slug')
         response = self.author_client.post(ADD_URL, data=self.form_data)
@@ -59,11 +56,11 @@ class TestLogic(ServicesClass):
         self.assertEqual(Note.objects.count(), self.count_notes_before)
         response = self.author_client.post(EDIT_URL, self.form_data)
         self.assertRedirects(response, SUCCESS_URL)
-        self.note.refresh_from_db()
-        self.assertEqual(self.note.title, self.form_data['title'])
-        self.assertEqual(self.note.text, self.form_data['text'])
-        self.assertEqual(self.note.slug, self.form_data['slug'])
-        self.assertEqual(self.note.author, self.author)
+        self.note_from_db = Note.objects.get()
+        self.assertEqual(self.note_from_db.title, self.form_data['title'])
+        self.assertEqual(self.note_from_db.text, self.form_data['text'])
+        self.assertEqual(self.note_from_db.slug, self.form_data['slug'])
+        self.assertEqual(self.note_from_db.author, self.author)
 
     def test_author_can_delete_note(self):
         """Пользователь может удалять свои заметки,"""

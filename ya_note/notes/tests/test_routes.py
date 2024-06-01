@@ -1,7 +1,7 @@
 from http import HTTPStatus
 
-from .services import (ADD_URL, DELETE_URL, DETAIL_URL, EDIT_URL,
-                       LIST_URL, LOGIN_URL, SUCCESS_URL, ServicesClass)
+from .services import (DELETE_URL, DETAIL_URL, EDIT_URL, HOME_URL, LOGIN_URL,
+                       LOGOUT_URL, SIGNUP_URL, ServicesClass)
 
 
 class TestRoutes(ServicesClass):
@@ -15,6 +15,8 @@ class TestRoutes(ServicesClass):
 
     def test_pages_availability_for_reader(self):
         """
+        Доступность страниц для аутентифицированного пользователя.
+
         Аутентифицированному пользователю (не автору заметки) доступны
         все страницы, кроме редактирования/удаления заметки и страницы
         отдельной заметки.
@@ -35,6 +37,8 @@ class TestRoutes(ServicesClass):
 
     def test_pages_availability_for_anonymous_user(self):
         """
+        Доступность страниц для анонимного пользователя.
+
         Анонимному пользователю доступны только главная страница,
         страницы регистрации, входа в учётную запись и выхода из неё.
         При попытке перейти на страницу списка заметок,
@@ -42,18 +46,16 @@ class TestRoutes(ServicesClass):
         отдельной заметки, редактирования или удаления заметки анонимный
         пользователь перенаправляется на страницу логина.
         """
-        not_access_urls = (
-            DETAIL_URL,
-            EDIT_URL,
-            DELETE_URL,
-            LIST_URL,
-            ADD_URL,
-            SUCCESS_URL,
+        access_urls = (
+            HOME_URL,
+            LOGIN_URL,
+            LOGOUT_URL,
+            SIGNUP_URL,
         )
         for url in self.urls:
             with self.subTest(url=url):
                 response = self.client.get(url)
-                if url not in not_access_urls:
+                if url in access_urls:
                     self.assertEqual(response.status_code, HTTPStatus.OK)
                 else:
                     redirect_url = f'{LOGIN_URL}?next={url}'
